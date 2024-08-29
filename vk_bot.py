@@ -1,9 +1,9 @@
 import random
 
+from google.cloud import dialogflow
 from environs import Env
 import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
-from google.cloud import dialogflow
 
 
 def detect_intent_text(project_id, session_id, text, language_code='ru-RUS'):
@@ -14,7 +14,10 @@ def detect_intent_text(project_id, session_id, text, language_code='ru-RUS'):
     response = session_client.detect_intent(
         request={"session": session, "query_input": query_input}
     )
-    return response.query_result.fulfillment_text
+    if response.query_result.intent.is_fallback:
+        return None
+    else:
+        return response.query_result.fulfillment_text
 
 
 def echo(event, vk_api, message):
@@ -37,7 +40,8 @@ def main():
         if event.type == VkEventType.MESSAGE_NEW and event.to_me:
             user_message = event.text
             response_df = detect_intent_text(project_id, event.user_id, user_message)
-            echo(event, vk_api, response_df)
+            if response_df:
+                echo(event, vk_api, response_df)
 
 
 if __name__ == '__main__':
