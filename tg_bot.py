@@ -1,10 +1,18 @@
 import logging
+import time
 
 from environs import Env
 from google.cloud import dialogflow
-import telegram
+
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+
+from logger_bot import TelegramLogsHandler
+
+
+ERROR_CHECKING_DELAY = 10
+
+logger = logging.getLogger('Logger')
 
 
 def detect_intent_text(project_id, session_id, text, language_code='ru-RUS'):
@@ -39,13 +47,23 @@ def main():
     env.read_env()
     bot_token = env.str('TG_BOT_TOKEN')
     project_id = env.str('PROJECT_ID')
+    logger.setLevel(logging.DEBUG)
+    telegram_handler = TelegramLogsHandler()
+    telegram_handler.setLevel(logging.DEBUG)
+    logger.addHandler(telegram_handler)
+    logger.info('Телеграм-бот запущен')
     updater = Updater(bot_token)
-    dispatcher = updater.dispatcher
-    dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo_dialogflow))
-    dispatcher.bot_data['project_id'] = project_id
-    updater.start_polling()
-    updater.idle()
+    while True:
+        try:
+            dispatcher = updater.dispatcher
+            dispatcher.add_handler(CommandHandler("start", start))
+            dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo_dialogflow))
+            dispatcher.bot_data['project_id'] = project_id
+            updater.start_polling()
+            updater.idle()
+        except Exception:
+            logger.exception('Телеграм-бот упал с ошибкой:')
+            time.sleep(ERROR_CHECKING_DELAY)
 
 
 if __name__ == '__main__':
