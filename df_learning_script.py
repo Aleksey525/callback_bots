@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 import requests
@@ -51,16 +52,24 @@ def main():
     env = Env()
     env.read_env()
     project_id = env.str('PROJECT_ID')
+    parser = argparse.ArgumentParser(
+        description='Скрипт для обучения Dialogflow'
+    )
+    parser.add_argument('topic', type=str, help='learning_topic')
+    args = parser.parse_args()
+    training_topic = args.topic
     url = 'https://dvmn.org/media/filer_public/a7/db/a7db66c0-1259-4dac-9726-2d1fa9c44f20/questions.json'
     download_file(url)
     file_name = get_file_name(url)
     with open(file_name, 'r') as file:
         phrases_json = file.read()
-    phrases = json.loads(phrases_json)
-    display_name = 'Как устроиться к вам на работу'
-    training_phrases_parts = phrases['Устройство на работу']['questions']
-    message_texts = [phrases['Устройство на работу']['answer'], ]
-    create_intent(project_id, display_name, training_phrases_parts, message_texts)
+    learning_topics = json.loads(phrases_json)
+    for topic, phrases in learning_topics.items():
+        if topic == training_topic:
+            display_name = topic
+            training_phrases_parts = phrases['questions']
+            message_texts = [phrases['answer'], ]
+            create_intent(project_id, display_name, training_phrases_parts, message_texts)
 
 
 if __name__ == '__main__':
