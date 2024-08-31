@@ -7,12 +7,10 @@ from environs import Env
 import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
 
-from logger_bot import TelegramLogsHandler
+from logger_bot import TelegramLogsHandler, logger
 
 
 ERROR_CHECKING_DELAY = 10
-
-logger = logging.getLogger('Logger')
 
 
 def detect_intent_text(project_id, session_id, text, language_code='ru-RUS'):
@@ -29,7 +27,7 @@ def detect_intent_text(project_id, session_id, text, language_code='ru-RUS'):
         return response.query_result.fulfillment_text
 
 
-def echo(event, vk_api, message):
+def echo_dialogflow(event, vk_api, message):
     vk_api.messages.send(
         user_id=event.user_id,
         message=message,
