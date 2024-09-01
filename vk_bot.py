@@ -57,7 +57,7 @@ def main():
                     if response_df:
                         echo_dialogflow(event, vk_api, response_df)
         except Exception:
-            logger.exception('Бот упал с ошибкой:')
+            logger.exception('VK-бот упал с ошибкой:')
             time.sleep(ERROR_CHECKING_DELAY)
 
 
