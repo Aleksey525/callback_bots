@@ -1,5 +1,8 @@
 # Боты-помощники с интегрированной нейросетью
-Боты для Телеграм и ВКонтакте с [DialogFlow](https://dialogflow.cloud.google.com/#/getStarted).
+Боты для Телеграм и ВКонтакте с [DialogFlow](https://dialogflow.cloud.google.com/#/getStarted).  
+`Телеграм` - [ссылка](https://t.me/ACallbackBot)  
+`ВКонтакте` - [ссылка](https://vk.com/im?sel=-82796087)
+
 
 ### Как установить
 
