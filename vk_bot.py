@@ -44,7 +44,7 @@ def main():
                     user_message = event.text
                     response_df = detect_intent_text(project_id, event.user_id, user_message)
                     if response_df:
-                        echo_dialogflow(event, vk_api, response_df)
+                        get_response_df(event, vk_api, response_df)
         except Exception:
             logger.exception('VK-бот упал с ошибкой:')
             time.sleep(ERROR_CHECKING_DELAY)

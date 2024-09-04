@@ -1,9 +1,5 @@
 import logging
 
-from environs import Env
-from dotenv import load_dotenv
-import telegram
-
 
 logger = logging.getLogger('Logger')
 
