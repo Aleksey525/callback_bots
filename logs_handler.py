@@ -1,20 +1,19 @@
 import logging
 
 from environs import Env
+from dotenv import load_dotenv
 import telegram
 
 
 logger = logging.getLogger('Logger')
-env = Env()
-env.read_env()
 
 
 class TelegramLogsHandler(logging.Handler):
 
-    def __init__(self):
+    def __init__(self, chat_id, logger_bot):
         super().__init__()
-        self.chat_id = env.str('TG_CHAT_ID')
-        self.tg_bot = telegram.Bot(token=env.str('TG_LOGGER_BOT_TOKEN'))
+        self.chat_id = chat_id
+        self.tg_bot = logger_bot
 
     def emit(self, record):
         log_entry = self.format(record)

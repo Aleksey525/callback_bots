@@ -4,10 +4,11 @@ import time
 
 from google.cloud import dialogflow
 from environs import Env
+import telegram
 import vk_api as vk
 from vk_api.longpoll import VkLongPoll, VkEventType
 
-from logger_bot import TelegramLogsHandler, logger
+from logs_handler import TelegramLogsHandler, logger
 
 
 ERROR_CHECKING_DELAY = 10
@@ -41,9 +42,11 @@ def main():
     bot_token = env.str('VK_BOT_TOKEN')
     project_id = env.str('PROJECT_ID')
     vk_session = vk.VkApi(token=bot_token)
+    chat_id = env.str('TG_CHAT_ID')
+    logger_bot = telegram.Bot(token=env.str('TG_LOGGER_BOT_TOKEN'))
     vk_api = vk_session.get_api()
     logger.setLevel(logging.DEBUG)
-    telegram_handler = TelegramLogsHandler()
+    telegram_handler = TelegramLogsHandler(chat_id, logger_bot)
     telegram_handler.setLevel(logging.DEBUG)
     logger.addHandler(telegram_handler)
     logger.info('VK-бот запущен')

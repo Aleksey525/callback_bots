@@ -1,12 +1,13 @@
 import logging
 import time
 
+import telegram
 from environs import Env
 from google.cloud import dialogflow
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
-from logger_bot import TelegramLogsHandler, logger
+from logs_handler import TelegramLogsHandler, logger
 
 
 ERROR_CHECKING_DELAY = 10
@@ -44,8 +45,10 @@ def main():
     env.read_env()
     bot_token = env.str('TG_BOT_TOKEN')
     project_id = env.str('PROJECT_ID')
+    chat_id = env.str('TG_CHAT_ID')
+    logger_bot = telegram.Bot(token=env.str('TG_LOGGER_BOT_TOKEN'))
     logger.setLevel(logging.DEBUG)
-    telegram_handler = TelegramLogsHandler()
+    telegram_handler = TelegramLogsHandler(chat_id, logger_bot)
     telegram_handler.setLevel(logging.DEBUG)
     logger.addHandler(telegram_handler)
     logger.info('Телеграм-бот запущен')
