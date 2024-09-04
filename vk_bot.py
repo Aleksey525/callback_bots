@@ -14,7 +14,7 @@ from logs_handler import TelegramLogsHandler, logger
 ERROR_CHECKING_DELAY = 10
 
 
-def echo_dialogflow(event, vk_api, message):
+def get_response_df(event, vk_api, message):
     vk_api.messages.send(
         user_id=event.user_id,
         message=message,

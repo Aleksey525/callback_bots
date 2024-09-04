@@ -21,7 +21,7 @@ def start(update: Update, context: CallbackContext):
     )
 
 
-def echo_dialogflow(update: Update, context: CallbackContext):
+def get_response_df(update: Update, context: CallbackContext):
     text = update.message.text
     project_id = context.bot_data['project_id']
     session_id = update.effective_chat.id
