@@ -42,10 +42,9 @@ def get_file_name(file_link):
     return file_name
 
 
-def download_file(file_link):
+def download_file(file_link, file_name):
     response = requests.get(file_link)
     response.raise_for_status()
-    file_name = get_file_name(file_link)
     with open(file_name, 'wb') as file:
         file.write(response.content)
 
@@ -61,8 +60,8 @@ def main():
     parser.add_argument('--file_url', default=json_file_url, type=str, help='learning_topic')
     args = parser.parse_args()
     url = args.file_url
-    download_file(url)
     file_name = get_file_name(url)
+    download_file(url, file_name)
     with open(file_name, 'r') as file:
         phrases_json = file.read()
     learning_topics = json.loads(phrases_json)
