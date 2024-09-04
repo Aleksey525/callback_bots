@@ -1,6 +1,8 @@
 import argparse
 import json
 import os
+
+import google.api_core.exceptions
 import requests
 from urllib.parse import urlsplit, unquote
 
@@ -52,24 +54,26 @@ def main():
     env = Env()
     env.read_env()
     project_id = env.str('PROJECT_ID')
+    json_file_url = env.str('JSON_FILE_URL')
     parser = argparse.ArgumentParser(
         description='Скрипт для обучения Dialogflow'
     )
-    parser.add_argument('topic', type=str, help='learning_topic')
+    parser.add_argument('--file_url', default=json_file_url, type=str, help='learning_topic')
     args = parser.parse_args()
-    training_topic = args.topic
-    url = 'https://dvmn.org/media/filer_public/a7/db/a7db66c0-1259-4dac-9726-2d1fa9c44f20/questions.json'
+    url = args.file_url
     download_file(url)
     file_name = get_file_name(url)
     with open(file_name, 'r') as file:
         phrases_json = file.read()
     learning_topics = json.loads(phrases_json)
     for topic, phrases in learning_topics.items():
-        if topic == training_topic:
+        try:
             display_name = topic
             training_phrases_parts = phrases['questions']
             message_texts = [phrases['answer'], ]
             create_intent(project_id, display_name, training_phrases_parts, message_texts)
+        except google.api_core.exceptions.InvalidArgument:
+            continue
 
 
 if __name__ == '__main__':
