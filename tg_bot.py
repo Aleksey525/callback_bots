@@ -3,25 +3,14 @@ import time
 
 import telegram
 from environs import Env
-from google.cloud import dialogflow
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 
+from google_df_api import detect_intent_text
 from logs_handler import TelegramLogsHandler, logger
 
 
 ERROR_CHECKING_DELAY = 10
-
-
-def detect_intent_text(project_id, session_id, text, language_code='ru-RUS'):
-    session_client = dialogflow.SessionsClient()
-    session = session_client.session_path(project_id, session_id)
-    text_input = dialogflow.TextInput(text=text, language_code=language_code)
-    query_input = dialogflow.QueryInput(text=text_input)
-    response = session_client.detect_intent(
-        request={"session": session, "query_input": query_input}
-    )
-    return response.query_result.fulfillment_text
 
 
 def start(update: Update, context: CallbackContext):
@@ -37,7 +26,8 @@ def echo_dialogflow(update: Update, context: CallbackContext):
     project_id = context.bot_data['project_id']
     session_id = update.effective_chat.id
     df_response = detect_intent_text(project_id, session_id, text)
-    update.message.reply_text(df_response)
+    if df_response:
+        update.message.reply_text(df_response)
 
 
 def main():
