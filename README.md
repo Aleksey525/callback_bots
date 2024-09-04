@@ -33,30 +33,32 @@ python tg_bot.py
 python vk_bot.py 
 ```
 
-Скрипт для обучения [DialogFlow](https://dialogflow.cloud.google.com/#/getStarted):
+Скрипт для обучения [DialogFlow](https://dialogflow.cloud.google.com/#/getStarted):  
+
 ```
-python df_learning_script.py "Устройство на работу" 
+python df_learning_script.py
 ```
-Скрипт скачивает `json` файл с темами для обучения по [ссылке](https://dvmn.org/media/filer_public/a7/db/a7db66c0-1259-4dac-9726-2d1fa9c44f20/questions.json) и взаимодействует с нейросетью по API.  
-Доступные темы:
-- Устройство на работу
-- Забыл пароль
-- Удаление аккаунта
-- Вопросы от забаненных
-- Вопросы от действующих партнеров
+По умолчанию крипт скачивает `json` файл с темами для обучения по [ссылке](https://dvmn.org/media/filer_public/a7/db/a7db66c0-1259-4dac-9726-2d1fa9c44f20/questions.json) и взаимодействует с нейросетью по API.  
+  
+Запуск с аргументами:
+
+```
+python df_learning_script.py --file_url "ссылка на JSON-файл"
+```
 
 ### Переменные окружения
 
 Часть настроек проекта берётся из переменных окружения. Чтобы их определить, создайте файл `.env` в корневом каталоге проекта и 
 запишите туда данные в таком формате: `ПЕРЕМЕННАЯ=значение`.
 
-Доступны 6 переменных:
+Доступны 7 переменных:
 - `TG_BOT_TOKEN` — API-токен телеграм-бота 
 - `VK_BOT_TOKEN` — API-токен ВКонтакте-бота
 - `TG_LOGGER_BOT_TOKEN` — API-токен телеграм-бота для мониторинга
 - `GOOGLE_APPLICATION_CREDENTIALS` — путь до файла с ключами от Google - [Документация](https://cloud.google.com/dialogflow/es/docs/quick/setup#sdk)
 - `PROJECT_ID` — идентификатор Google проекта - [Документация](https://cloud.google.com/dialogflow/es/docs/quick/setup)
 - `TG_CHAT_ID` — идентификатор чата
+- `JSON_FILE_URL` — ссылка на JOSN-файл по умолчанию
 
 ## Цели проекта
 
