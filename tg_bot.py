@@ -25,9 +25,9 @@ def get_response_df(update: Update, context: CallbackContext):
     text = update.message.text
     project_id = context.bot_data['project_id']
     session_id = update.effective_chat.id
-    df_response = detect_intent_text(project_id, session_id, text)
-    if df_response:
-        update.message.reply_text(df_response)
+    df_response_text, df_response_status = detect_intent_text(project_id, session_id, text)
+    if df_response_text:
+        update.message.reply_text(df_response_text)
 
 
 def main():
